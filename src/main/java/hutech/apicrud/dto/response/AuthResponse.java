@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+
 public class AuthResponse {
     private boolean authenticated;
+    private String token;
 
     public boolean isAuthenticated() {
         return authenticated;
@@ -18,5 +20,13 @@ public class AuthResponse {
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

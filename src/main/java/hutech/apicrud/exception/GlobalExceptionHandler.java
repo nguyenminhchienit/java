@@ -1,6 +1,8 @@
 package hutech.apicrud.exception;
 
 import hutech.apicrud.dto.request.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse> exceptionHandler(Exception e) {
         ApiResponse response = new ApiResponse();
@@ -38,7 +42,7 @@ public class GlobalExceptionHandler {
         try {
             errorCode = ErrorCode.valueOf(enumKey);
         }catch (IllegalArgumentException exception){
-
+            log.info(exception.getMessage());
         }
 
 

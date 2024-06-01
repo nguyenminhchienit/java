@@ -2,7 +2,6 @@ package hutech.apicrud.services;
 
 import hutech.apicrud.dto.request.UserCreateRequest;
 import hutech.apicrud.dto.request.UserUpdateRequest;
-import hutech.apicrud.dto.response.UserResponse;
 import hutech.apicrud.entities.User;
 import hutech.apicrud.exception.AppException;
 import hutech.apicrud.exception.ErrorCode;
