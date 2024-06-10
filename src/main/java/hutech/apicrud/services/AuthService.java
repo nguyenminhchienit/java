@@ -91,7 +91,6 @@ public class AuthService {
         var claims = signedJWT.getJWTClaimsSet().getClaim("user");
 
 //        JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
-//
 //        Object userValue = claimsSet.getClaim("user");
 
         var verified = signedJWT.verify(jwsVerifier);
