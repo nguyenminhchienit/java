@@ -9,6 +9,7 @@ import hutech.apicrud.dto.request.AuthRequest;
 import hutech.apicrud.dto.request.VerifyRequest;
 import hutech.apicrud.dto.response.AuthResponse;
 import hutech.apicrud.dto.response.VerifyResponse;
+import hutech.apicrud.entities.User;
 import hutech.apicrud.exception.AppException;
 import hutech.apicrud.exception.ErrorCode;
 import hutech.apicrud.repository.UserRepository;
@@ -20,11 +21,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Service
 public class AuthService {
@@ -46,24 +49,25 @@ public class AuthService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
-        var token = generateToken(request);
+        var token = generateToken(user, request);
         AuthResponse authResponse = new AuthResponse();
         authResponse.setToken(token);
         authResponse.setAuthenticated(auth);
         return authResponse;
     }
 
-    public String generateToken(AuthRequest request) throws KeyLengthException {
+    public String generateToken(User user, AuthRequest request) throws KeyLengthException {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(request.getUsername())
+                .subject(user.getUsername())
                 .issuer("takis.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
                 .claim("user", request)
+                .claim("scope", buildScope(user))
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -100,5 +104,13 @@ public class AuthService {
         verifyResponse.setData(claims);
 
         return verifyResponse;
+    }
+
+    private String buildScope(User user){
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if(!CollectionUtils.isEmpty(user.getRoles())){
+            user.getRoles().forEach(role -> stringJoiner.add(role));
+        }
+        return stringJoiner.toString();
     }
 }

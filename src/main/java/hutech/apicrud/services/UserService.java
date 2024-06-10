@@ -3,6 +3,7 @@ package hutech.apicrud.services;
 import hutech.apicrud.dto.request.UserCreateRequest;
 import hutech.apicrud.dto.request.UserUpdateRequest;
 import hutech.apicrud.entities.User;
+import hutech.apicrud.enums.Role;
 import hutech.apicrud.exception.AppException;
 import hutech.apicrud.exception.ErrorCode;
 import hutech.apicrud.mapper.UserMapper;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -31,6 +33,10 @@ public class UserService {
         User user = userMapper.toUser(request);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name());
+        user.setRoles(roles);
 
         return userRepository.save(user);
     }

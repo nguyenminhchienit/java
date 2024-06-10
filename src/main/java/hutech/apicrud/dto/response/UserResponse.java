@@ -6,24 +6,33 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
 public class UserResponse {
     private String id;
     private String username;
-    private String password;
     private String firstName;
     private String lastName;
     private LocalDate dob;
+    private Set<String> roles;
 
-    public UserResponse(String id, String username, String password, String firstName, String lastName, LocalDate dob) {
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public UserResponse(String id, String username, String firstName, String lastName, LocalDate dob, Set<String> roles) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
+        this.roles = roles;
     }
 
     public UserResponse() {
@@ -45,13 +54,6 @@ public class UserResponse {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getFirstName() {
         return firstName;
