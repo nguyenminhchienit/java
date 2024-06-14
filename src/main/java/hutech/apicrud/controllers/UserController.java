@@ -45,6 +45,14 @@ public class UserController {
         return response;
     }
 
+    @GetMapping("my-info")
+    ApiResponse<UserResponse> getUserMyInfoLogin(){
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setSuccess(true);
+        response.setData(userService.getUserMyInfoLogin());
+        return response;
+    }
+
     @GetMapping("/{userId}")
     ApiResponse<User> getUser(@PathVariable("userId") String userId) {
         ApiResponse response = new ApiResponse<>();

@@ -4,6 +4,7 @@ import hutech.apicrud.dto.request.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,7 +30,21 @@ public class GlobalExceptionHandler {
         response.setMessage(errorCode.getMessage());
         response.setCode(errorCode.getCode());
         response.setSuccess(false);
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity
+                .status(errorCode.getStatusCode())
+                .body(response);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ApiResponse> handlingAccessDeniedException(AccessDeniedException exception){
+        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+        ApiResponse response = new ApiResponse();
+        response.setMessage(errorCode.getMessage());
+        response.setCode(errorCode.getCode());
+        response.setSuccess(false);
+        return ResponseEntity.status(errorCode.getStatusCode()).body(
+                response
+        );
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)

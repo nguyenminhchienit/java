@@ -2,13 +2,18 @@ package hutech.apicrud.services;
 
 import hutech.apicrud.dto.request.UserCreateRequest;
 import hutech.apicrud.dto.request.UserUpdateRequest;
+import hutech.apicrud.dto.response.UserResponse;
 import hutech.apicrud.entities.User;
 import hutech.apicrud.enums.Role;
 import hutech.apicrud.exception.AppException;
 import hutech.apicrud.exception.ErrorCode;
 import hutech.apicrud.mapper.UserMapper;
 import hutech.apicrud.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +23,7 @@ import java.util.List;
 
 @Service
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private UserRepository userRepository;
 
@@ -41,8 +47,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
+//    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getAllUsers(){
         return userRepository.findAll();
+    }
+
+    public UserResponse getUserMyInfoLogin(){
+        var context = SecurityContextHolder.getContext();
+
+        String username = context.getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+        return userMapper.toUserResponse(user);
     }
 
     public User getUserById(String userId){
