@@ -16,17 +16,17 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private LocalDate dob;
-    private Set<String> roles;
+    private Set<RoleResponse> roles;
 
-    public Set<String> getRoles() {
+    public Set<RoleResponse> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) {
+    public void setRoles(Set<RoleResponse> roles) {
         this.roles = roles;
     }
 
-    public UserResponse(String id, String username, String firstName, String lastName, LocalDate dob, Set<String> roles) {
+    public UserResponse(String id, String username, String firstName, String lastName, LocalDate dob, Set<RoleResponse> roles) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;

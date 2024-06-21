@@ -8,6 +8,7 @@ import hutech.apicrud.enums.Role;
 import hutech.apicrud.exception.AppException;
 import hutech.apicrud.exception.ErrorCode;
 import hutech.apicrud.mapper.UserMapper;
+import hutech.apicrud.repository.RoleRepository;
 import hutech.apicrud.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,9 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     public User addUser(UserCreateRequest request){
 
 
@@ -42,7 +46,7 @@ public class UserService {
 
         HashSet<String> roles = new HashSet<>();
         roles.add(Role.USER.name());
-        user.setRoles(roles);
+        //user.setRoles(roles);
 
         return userRepository.save(user);
     }
@@ -52,13 +56,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public UserResponse getUserMyInfoLogin(){
+    public User getUserMyInfoLogin(){
         var context = SecurityContextHolder.getContext();
 
         String username = context.getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
-        return userMapper.toUserResponse(user);
+        //return userMapper.toUserResponse(user);
+        return user;
     }
 
     public User getUserById(String userId){
@@ -71,6 +76,9 @@ public class UserService {
         userMapper.updateUser(user,request);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userRepository.save(user);
 

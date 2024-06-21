@@ -46,8 +46,8 @@ public class UserController {
     }
 
     @GetMapping("my-info")
-    ApiResponse<UserResponse> getUserMyInfoLogin(){
-        ApiResponse<UserResponse> response = new ApiResponse<>();
+    ApiResponse<User> getUserMyInfoLogin(){
+        ApiResponse<User> response = new ApiResponse<>();
         response.setSuccess(true);
         response.setData(userService.getUserMyInfoLogin());
         return response;
