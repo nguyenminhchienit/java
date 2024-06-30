@@ -4,6 +4,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.KeyLengthException;
 import hutech.apicrud.dto.request.ApiResponse;
 import hutech.apicrud.dto.request.AuthRequest;
+import hutech.apicrud.dto.request.LogoutRequest;
 import hutech.apicrud.dto.request.VerifyRequest;
 import hutech.apicrud.dto.response.AuthResponse;
 import hutech.apicrud.dto.response.VerifyResponse;
@@ -37,6 +38,14 @@ public class AuthController {
         ApiResponse response = new ApiResponse<>();
         response.setSuccess(true);
         response.setData(result);
+        return response;
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> auth(@RequestBody LogoutRequest request) throws JOSEException, ParseException {
+        authService.logout(request);
+        ApiResponse response = new ApiResponse<>();
+        response.setSuccess(true);
         return response;
     }
 }
